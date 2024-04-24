@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Wallet</title>
+
+    <script 
+        type="text/javascript" 
+        src="https://unpkg.com/bsv@1.5.3/bsv.min.js">
+    </script>
+    <script
+        type="text/javascript"
+        src="https://unpkg.com/bsv@1.5.3/bsv-mnemonic.min.js">
+    </script>
+    <script 
+        type="text/javascript" 
+        src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js">
+    </script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    
+  </head>
+  <body>
+      
+    <div id="block1">
+        <h1>Your Private Key is:</h1> 
+        <p id="privKey"> </p>
+    </div>
+    <div id="block2">
+        <h1>Your Mnemonic Phrase is:</h1> 
+        <p id="phrase"> </p>
+    </div>
+    <div id="block3">
+        <h1>Your Address is:</h1> 
+        <p id="addressText"> </p>
+    </div>
+    <div id="block4">
+        <h1>Your QR code:</h1>
+        <p id="qrcode"></p>
+    </div>
+    <div id="block5">
+        <h1>Balance in Satoshis:</h1>
+        <p id="balance"></p>
+    </div>
+
+    <script> 
+    // Generate Mnemonic Phrase
+    var bsvMnemonic = window.bsvMnemonic;
+    var words = bsvMnemonic.fromRandom();
+
+    // Generate Private Key, Public Key, and Address from Mnemonic Phrase
+    var hdPrivateKey = bsv.HDPrivateKey.fromSeed(words.toSeed());
+    var privateKey = hdPrivateKey.deriveChild("m/44'/0'/0'").privateKey;
+    var pubKey = bsv.PublicKey.fromPrivateKey(privateKey);
+    var address = bsv.Address.fromPublicKey(pubKey);
+
+    // Display Private Key, Mnemonic Phrase, Public Key, and Address
+    var privKeyElem = document.querySelector("#privKey");
+    privKeyElem.innerHTML = privateKey.toString();
+
+    var phraseElem = document.querySelector("#phrase");
+    phraseElem.innerHTML = words.toString();
+
+    var addressElem = document.querySelector("#addressText");
+    addressElem.innerHTML = address.toString();
+
+    var addressCode = 'bitcoinsv:' + address.toString();
+    new QRCode(document.getElementById("qrcode"), addressCode);
+
+    // Display Balance
+    var config = {
+       method: 'get',
+       url: "https://api.whatsonchain.com/v1/bsv/main/address/" +
+       address.toString() + "/balance", 
+    };
+  
+    axios(config)
+    .then((response) => {
+      let data = JSON.stringify(response.data);
+      let balanceElem = document.getElementById("balance");
+      balanceElem.innerHTML = data;
+    });
+
+    </script>
+  </body>
+</html>

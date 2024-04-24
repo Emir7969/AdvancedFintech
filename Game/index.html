@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NPV Calculation Game</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>NPV Calculation Game</h1>
+        <p id="cashflows"></p>
+        <button onclick="calculateNPV()">Calculate NPV</button>
+        <p id="result"></p>
+        <div id="options">
+            <label><input type="radio" name="answer" value="-13.42"> -13.42</label>
+            <label><input type="radio" name="answer" value="0"> 0</label>
+            <label><input type="radio" name="answer" value="13.42"> 13.42</label>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
